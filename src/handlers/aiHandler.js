@@ -1,36 +1,43 @@
-import { analyzeText, generateImage, getCodeAssistance } from '../services/openai.js';
-import { formatErrorMessage } from '../utils/messageFormatter.js';
+import { openai } from '../config/openai.js';
+import { messageFormatter } from '../utils/formatters/index.js';
+import { sendTypingAction } from '../services/telegram.js';
 
-export async function handleAnalyzeCommand(bot, chatId, text) {
+export async function handleChatCommand(bot, msg, text) {
+  const chatId = msg.chat.id;
+  
   try {
-    const analysis = await analyzeText(text);
-    await bot.sendMessage(chatId, `📊 Análisis:\n\n${analysis}`);
+    await sendTypingAction(bot, chatId);
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        { role: "user", content: text }
+      ]
+    });
+
+    await bot.sendMessage(chatId, completion.choices[0].message.content);
   } catch (error) {
-    console.error('Error in AI analysis:', error);
-    await bot.sendMessage(chatId, formatErrorMessage(error));
+    console.error('Error in AI chat:', error);
+    await bot.sendMessage(chatId, messageFormatter.formatErrorMessage(error));
   }
 }
 
-export async function handleGenerateImageCommand(bot, chatId, prompt) {
+export async function handleImageCommand(bot, msg, prompt) {
+  const chatId = msg.chat.id;
+  
   try {
-    const loadingMsg = await bot.sendMessage(chatId, '🎨 Generando imagen...');
-    const imageUrl = await generateImage(prompt);
-    await bot.sendPhoto(chatId, imageUrl);
-    await bot.deleteMessage(chatId, loadingMsg.message_id);
+    await sendTypingAction(bot, chatId);
+    
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: prompt,
+      n: 1,
+      size: "1024x1024"
+    });
+
+    await bot.sendPhoto(chatId, response.data[0].url);
   } catch (error) {
     console.error('Error generating image:', error);
-    await bot.sendMessage(chatId, formatErrorMessage(error));
-  }
-}
-
-export async function handleCodeAssistanceCommand(bot, chatId, query) {
-  try {
-    const code = await getCodeAssistance(query);
-    await bot.sendMessage(chatId, `💻 Aquí tienes:\n\n\`\`\`\n${code}\n\`\`\``, {
-      parse_mode: 'Markdown'
-    });
-  } catch (error) {
-    console.error('Error in code assistance:', error);
-    await bot.sendMessage(chatId, formatErrorMessage(error));
+    await bot.sendMessage(chatId, messageFormatter.formatErrorMessage(error));
   }
 }
