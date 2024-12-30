@@ -1,5 +1,5 @@
 import { MENU_SECTIONS } from '../config/menu.js';
-import { messageFormatter } from '../utils/formatters/messageFormatter.js';
+import { messageFormatter } from '../utils/formatters/index.js';
 
 export async function handleMainMenu(bot, chatId) {
   const menuMessage = messageFormatter.formatMenuMessage();
