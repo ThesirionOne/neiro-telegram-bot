@@ -4,27 +4,19 @@ export const commands = [
     description: 'Iniciar el bot'
   },
   {
+    command: '/chat',
+    description: 'Chatear con la IA'
+  },
+  {
+    command: '/imagen',
+    description: 'Generar una imagen con IA'
+  },
+  {
+    command: '/voz',
+    description: 'Activar reconocimiento de voz'
+  },
+  {
     command: '/ayuda',
     description: 'Mostrar comandos disponibles'
-  },
-  {
-    command: '/tiempo',
-    description: 'Consultar el clima (por voz)'
-  },
-  {
-    command: '/analizar',
-    description: 'Analizar texto o imagen con IA'
-  },
-  {
-    command: '/generar',
-    description: 'Generar imagen con IA'
-  },
-  {
-    command: '/eth',
-    description: 'Consultar información de Ethereum'
-  },
-  {
-    command: '/codigo',
-    description: 'Asistente de programación'
   }
 ];
