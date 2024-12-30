@@ -1,0 +1,26 @@
+{
+  "name": "super-neiro-eth-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.64.0",
+    "@google-cloud/speech": "^6.1.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "openai": "^4.20.1",
+    "ethers": "^6.9.0",
+    "web3": "^4.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
