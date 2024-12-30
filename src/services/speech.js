@@ -1,22 +1,17 @@
-import { Speech } from '@google-cloud/speech';
-import { DEFAULT_LANGUAGE, VOICE_SAMPLE_RATE } from '../config/constants.js';
+// Simple speech-to-text service using Whisper API
+import { openai } from '../config/openai.js';
 
-const speech = new Speech();
-
-export async function transcribeAudio(audioContent) {
-  const request = {
-    audio: {
-      content: audioContent.toString('base64')
-    },
-    config: {
-      encoding: 'LINEAR16',
-      sampleRateHertz: VOICE_SAMPLE_RATE,
-      languageCode: DEFAULT_LANGUAGE,
-    }
-  };
-
-  const [response] = await speech.recognize(request);
-  return response.results
-    .map(result => result.alternatives[0].transcript)
-    .join('\n');
+export async function transcribeAudio(audioBuffer) {
+  try {
+    const response = await openai.audio.transcriptions.create({
+      file: audioBuffer,
+      model: "whisper-1",
+      language: "es"
+    });
+    
+    return response.text;
+  } catch (error) {
+    console.error('Error transcribing audio:', error);
+    throw new Error('Could not transcribe audio message');
+  }
 }
